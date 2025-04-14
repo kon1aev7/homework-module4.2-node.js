@@ -3,6 +3,7 @@ import createHttpError from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 
+import { parseMovieFilterParams } from '../utils/filters/parseMovieFilterParams.js';
 import { movieSortFields } from '../db/models/Movie.js';
 
 import {
@@ -16,7 +17,8 @@ import {
 export const getMoviesController = async (req, res) => {
   const paginationParams = parsePaginationParams(req.query);
   const sortParams = parseSortParams(req.query, movieSortFields);
-  const data = await getMovies({ ...paginationParams, ...sortParams });
+  const filters = parseMovieFilterParams(req.query);
+  const data = await getMovies({ ...paginationParams, ...sortParams, filters });
 
   res.json({
     status: 200,
